@@ -100,6 +100,7 @@ dn: uid=tsvnu,ou=people,dc=vnu,dc=edu,dc=vn
 changetype: modify
 replace: zimbraId
 zimbraId: 58557725-24c8-4fee-b428-aa18459d3c4e 
+Ctrl -D
 -----##########
 
 
@@ -138,4 +139,3 @@ rsync -avzh openec@172.16.6.166:/tmp/tsvnu.tgz /home/thangpc/
 zmmailbox -z -m nvthang@vnu.edu.vn addFilterRule 'Block_vnu' active any address "from" all contains "zimbra" address "from" all contains "@Zimbra" body contains "zimbra" body contains "Zimbra" fileinto "Junk" stop 
 
 
-oke 02

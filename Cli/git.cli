@@ -7,7 +7,7 @@ git remote add origin https://github.com/nguyenthang338/Trick.git
 git push -u origin master
 
 
-
+git pull ( update new veresion from master )
 
 $ git checkout -b [name_of_your_new_branch]
 Change working branch :

@@ -50,3 +50,23 @@ Which will show :
     The only difference is the : to say delete, you can do it too by using github interface to remove branch : https://help.github.com/articles/deleting-unused-branches.
 
     If you want to change default branch, it's so easy with github, in your fork go into Admin and in the drop-down list default branch choose what you want.
+
+
+
+
+    
+    This took me a while to figure out, so maybe this will help someone...
+
+    There are two ways to "undo" your last commit, depending on whether or not you have already made your commit public (pushed to your remote repository):
+
+    How to undo a local commit
+    Let's say I committed locally, but now want to remove that commit.
+
+    git log
+        commit 101: bad commit    # latest commit, this would be called 'HEAD'
+            commit 100: good commit   # second to last commit, this is the one we want
+            To restore everything back to the way it was prior to the last commit, we need to reset to the commit before HEAD:
+
+            git reset --soft HEAD^     # use --soft if you want to keep your changes
+            git reset --hard HEAD^     # use --hard if you don't care about keeping the changes you made
+            Now git log will show that our last commit has been remov

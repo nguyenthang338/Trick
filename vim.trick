@@ -8,3 +8,19 @@ Ctrl + V
 "A" to append to the right of the Visual Block
 "c" to change the Visual Block 
 "d" to delete the Visual Block
+
+# Move to all line 
+
+Next instance of the current word → *
+
+Previous instance of the current word → #
+
+First line of the file → gg
+
+Last line of the file → G
+
+Top of the screen → H
+
+Middle of the screen → M
+
+Bottom of the screen → L

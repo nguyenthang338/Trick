@@ -77,6 +77,10 @@
 [[snippets]]
   description = "Pull all request new version "
   command = "git pull  "
+[[snippets]]
+  description = "Show all branch from github clone"
+  command = "git branch -a"
+
 
 
     How to undo a local commit

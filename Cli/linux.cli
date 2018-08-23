@@ -74,6 +74,11 @@
   output = ""
 
 [[snippets]]
+  description = "Extract of archive.tar.gz or tar.xz or *.tar."
+  command = "tar -xf archive.tar.gz"
+  output = ""
+
+[[snippets]]
   description = "Compress an Entire Directory or a Single File"
   command = "tar -czvf name-of-archive.tar.gz /path/to/directory-or-file"
   output = ""

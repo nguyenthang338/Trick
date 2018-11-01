@@ -2,6 +2,7 @@
 pkill minergate-cli 
 cd ~
 #Install xmrig miner 
+sudo apt-get remove minergate-cli
 sudo apt-get install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev tmux -y 
 git clone https://github.com/xmrig/xmrig.git
 cd xmrig
@@ -21,7 +22,7 @@ rm mycron
 
 
 #Create tmux session  and exit 
-tmux new-sessio -s work\; \
+tmux new-sessio -s miner\; \
      send-keys '/root/xmrig/build/xmrig -a cryptonight -o stratum+tcp://xmr.pool.minergate.com:45700 -u thangmoney1@gmail.com -p x -t 14' C-m \; 
 
 tmux detach

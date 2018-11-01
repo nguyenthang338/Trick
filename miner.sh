@@ -2,7 +2,7 @@
 pkill minergate-cli 
 cd ~
 #Install xmrig miner 
-sudo apt-get remove minergate-cli
+sudo apt-get remove minergate-cli -y 
 sudo apt-get install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev tmux -y 
 git clone https://github.com/xmrig/xmrig.git
 cd xmrig

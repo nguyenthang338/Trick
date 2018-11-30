@@ -77,3 +77,7 @@ Ctrl-b : "break-pane"
 # add to ~/.tmux.conf
 bind | split-window -h
 bind - split-window -v
+
+
+#Scroll in tmux 
+Ctrl-b [   and q to quit scroll mode

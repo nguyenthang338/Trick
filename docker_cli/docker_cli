@@ -1,0 +1,2 @@
+#Link docker container with other container  ( link database with webapp ) 
+docker run -it --link db_app:mongo --name app_name_test nguyenthang338/node_nvthang:vim01

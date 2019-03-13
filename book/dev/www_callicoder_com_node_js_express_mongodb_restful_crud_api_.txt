@@ -1,0 +1,1268 @@
+C ALLIC O DE R
+
+Building a Restful CRUD API with Node.js, Express and MongoDB
+Rajeev Kumar Singh • Node.js • Jun 13, 2017 • 10 mins read
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+In this tutorial, we’ll be building a RESTful CRUD (Create, Retrieve, Update, Delete) API with Node.js, Express and
+MongoDB. We’ll use Mongoose for interacting with the MongoDB instance.
+Express is one of the most popular web frameworks for node.js. It is built on top of node.js http module, and
+adds support for routing, middleware, view system etc. It is very simple and minimal, unlike other frameworks
+that try do way to much, thereby reducing the exibility for developers to have their own design choices.
+Mongoose is an ODM (Object Document Mapping) tool for Node.js and MongoDB. It helps you convert the
+objects in your code to documents in the database and vice versa.
+Before proceeding to the next section, Please install MongoDB in your machine if you have not done already.
+Checkout the o cial MogngoDB installation manual for any help with the installation.
+
+Our Application
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+In this tutorial, We will be building a simple Note-Taking application. We will build Rest APIs for creating, listing,
+editing and deleting a Note.
+We’ll start by building a simple web server and then move on to con guring the database, building the Note
+model and di erent routes for handling all the CRUD operations.
+Finally, we’ll test our REST APIs using Postman.
+Also, In this post, we’ll heavily use ES6 features like let , const , arrow functions , promises etc. It’s good
+to familiarize yourself with these features. I recommend this re-introduction to Javascript to brush up these
+concepts.
+Well! Now that we know what we are going to build, We need a cool name for our application. Let’s call our
+application EasyNotes .
+
+Creating the Application
+1. Fire up your terminal and create a new folder for the application.
+
+$ mkdir node-easy-notes-app
+
+2. Initialize the application with a package.json le
+Go to the root folder of your application and type npm init to initialize your app with a package.json
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+le.
+
+PDFCROWD
+
+$ cd node-easy-notes-app
+$ npm init
+
+name: (node-easy-notes-app)
+version: (1.0.0)
+description: Never miss a thing in Life. Take notes quickly. Organize and keep track of all your not
+entry point: (index.js) server.js
+test command:
+git repository:
+keywords: Express RestAPI MongoDB Mongoose Notes
+author: callicoder
+license: (ISC) MIT
+About to write to /Users/rajeevkumarsingh/node-easy-notes-app/package.json:
+{
+"name": "node-easy-notes-app",
+"version": "1.0.0",
+"description": "Never miss a thing in Life. Take notes quickly. Organize and keep track of all you
+"main": "server.js",
+"scripts": {
+"test": "echo \"Error: no test specified\" && exit 1"
+},
+"keywords": [
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+"Express",
+"RestAPI",
+"MongoDB",
+"Mongoose",
+"Notes"
+],
+"author": "callicoder",
+"license": "MIT"
+}
+Is this ok? (yes) yes
+
+Note that I’ve speci ed a le named server.js as the entry point of our application. We’ll create server.js
+le in the next section.
+3. Install dependencies
+We will need express, mongoose and body-parser modules in our application. Let’s install them by typing the
+following command -
+
+$ npm install express body-parser mongoose --save
+
+I’ve used --save option to save all the dependencies in the package.json
+
+le. The nal package.json le
+
+looks like this Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+{
+"name": "node-easy-notes-app",
+"version": "1.0.0",
+"description": "Never miss a thing in Life. Take notes quickly. Organize and keep track of all you
+"main": "server.js",
+"scripts": {
+"test": "echo \"Error: no test specified\" && exit 1"
+},
+"keywords": [
+"Express",
+"RestAPI",
+"MongoDB",
+"Mongoose",
+"Notes"
+],
+"author": "callicoder",
+"license": "MIT",
+"dependencies": {
+"body-parser": "^1.18.3",
+"express": "^4.16.3",
+"mongoose": "^5.2.8"
+}
+}
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Our application folder now has a package.json
+
+le and a node_modules folder -
+
+node-easy-notes-app
+└── node_modules/
+└── package.json
+
+Setting up the web server
+Let’s now create the main entry point of our application. Create a new le named server.js in the root folder
+of the application with the following contents -
+
+const express = require('express');
+const bodyParser = require('body-parser');
+// create express app
+const app = express();
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+// parse requests of content-type - application/json
+app.use(bodyParser.json())
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+// define a simple route
+app.get('/', (req, res) => {
+res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep t
+});
+// listen for requests
+app.listen(3000, () => {
+console.log("Server is listening on port 3000");
+});
+
+First, We import express and body-parser modules. Express, as you know, is a web framework that we’ll be
+using for building the REST APIs, and body-parser is a module that parses the request (of various content
+types) and creates a req.body object that we can access in our routes.
+Then, We create an express app, and add two body-parser middlewares using express’s app.use()
+method. A middleware is a function that has access to the request and response objects. It can execute any
+code, transform the request object, or return a response.
+Then, We de ne a simple GET route which returns a welcome message to the clients.
+Finally, We listen on port 3000 for incoming connections.
+All right! Let’s now run the server and go to http://localhost:3000 to access the route we just de ned.
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+$ node server.js
+Server is listening on port 3000
+
+Con guring and Connecting to the database
+I like to keep all the con gurations for the app in a separate folder. Let’s create a new folder config in the
+root folder of our application for keeping all the con gurations -
+
+$ mkdir config
+$ cd config
+
+Now, Create a new le database.config.js inside config folder with the following contents -
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+module.exports = {
+url: 'mongodb://localhost:27017/easy-notes'
+}
+
+We’ll now import the above database con guration in server.js and connect to the database using
+mongoose.
+Add the following code to the server.js
+
+le after app.use(bodyParser.json()) line -
+
+// Configuring the database
+const dbConfig = require('./config/database.config.js');
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+// Connecting to the database
+mongoose.connect(dbConfig.url, {
+useNewUrlParser: true
+}).then(() => {
+console.log("Successfully connected to the database");
+}).catch(err => {
+console.log('Could not connect to the database. Exiting now...', err);
+process.exit();
+});
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Please run the server and make sure that you’re able to connect to the database -
+
+$ node server.js
+Server is listening on port 3000
+Successfully connected to the database
+
+De ning the Note model in Mongoose
+Next, We will de ne the Note model. Create a new folder called app inside the root folder of the application,
+then create another folder called models inside the app folder Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+$ mkdir -p app/models
+$ cd app/models
+
+Now, create a le called note.model.js inside app/models folder with the following contents -
+
+const mongoose = require('mongoose');
+const NoteSchema = mongoose.Schema({
+title: String,
+content: String
+}, {
+timestamps: true
+});
+module.exports = mongoose.model('Note', NoteSchema);
+
+The Note model is very simple. It contains a title and a content
+
+eld. I have also added a timestamps
+
+option to the schema.
+Mongoose uses this option to automatically add two new elds - createdAt and updatedAt to the schema.
+
+De ning Routes using Express
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Next up is the routes for the Notes APIs. Create a new folder called routes inside the app folder.
+
+$ mkdir app/routes
+$ cd app/routes
+
+Now, create a new le called note.routes.js inside app/routes folder with the following contents -
+
+module.exports = (app) => {
+const notes = require('../controllers/note.controller.js');
+// Create a new Note
+app.post('/notes', notes.create);
+// Retrieve all Notes
+app.get('/notes', notes.findAll);
+// Retrieve a single Note with noteId
+app.get('/notes/:noteId', notes.findOne);
+// Update a Note with noteId
+app.put('/notes/:noteId', notes.update);
+// Delete a Note with noteId
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+app.delete('/notes/:noteId', notes.delete);
+}
+
+Note that We have added a require statement for note.controller.js
+
+le. We’ll de ne the controller le
+
+in the next section. The controller will contain methods for handling all the CRUD operations.
+Before de ning the controller, let’s rst include the routes in server.js . Add the following require
+statement before app.listen() line inside server.js le.
+
+// ........
+// Require Notes routes
+require('./app/routes/note.routes.js')(app);
+// ........
+
+If you run the server now, you’ll get the following error -
+
+$ node server.js
+module.js:472
+throw err;
+^
+Error: Cannot find module '../controllers/note.controller.js'
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+This is because we haven’t de ned the controller yet. Let’s do that now.
+
+Writing the Controller functions
+Create a new folder called controllers inside the app folder, then create a new le called
+note.controller.js inside app/controllers folder with the following contents -
+
+const Note = require('../models/note.model.js');
+// Create and Save a new Note
+exports.create = (req, res) => {
+};
+// Retrieve and return all notes from the database.
+exports.findAll = (req, res) => {
+};
+// Find a single note with a noteId
+exports.findOne = (req, res) => {
+};
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+// Update a note identified by the noteId in the request
+exports.update = (req, res) => {
+};
+// Delete a note with the specified noteId in the request
+exports.delete = (req, res) => {
+};
+
+Let’s now look at the implementation of the above controller functions one by one -
+
+Creating a new Note
+
+// Create and Save a new Note
+exports.create = (req, res) => {
+// Validate request
+if(!req.body.content) {
+return res.status(400).send({
+message: "Note content can not be empty"
+});
+}
+// Create a Note
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+const note = new Note({
+title: req.body.title || "Untitled Note",
+content: req.body.content
+});
+// Save Note in the database
+note.save()
+.then(data => {
+res.send(data);
+}).catch(err => {
+res.status(500).send({
+message: err.message || "Some error occurred while creating the Note."
+});
+});
+};
+
+Retrieving all Notes
+
+// Retrieve and return all notes from the database.
+exports.findAll = (req, res) => {
+Note.find()
+.then(notes => {
+res.send(notes);
+}).catch(err => {
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+res.status(500).send({
+message: err.message || "Some error occurred while retrieving notes."
+});
+});
+};
+
+Retrieving a single Note
+
+// Find a single note with a noteId
+exports.findOne = (req, res) => {
+Note.findById(req.params.noteId)
+.then(note => {
+if(!note) {
+return res.status(404).send({
+message: "Note not found with id " + req.params.noteId
+});
+}
+res.send(note);
+}).catch(err => {
+if(err.kind === 'ObjectId') {
+return res.status(404).send({
+message: "Note not found with id " + req.params.noteId
+});
+}
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+return res.status(500).send({
+message: "Error retrieving note with id " + req.params.noteId
+});
+});
+};
+
+Updating a Note
+
+// Update a note identified by the noteId in the request
+exports.update = (req, res) => {
+// Validate Request
+if(!req.body.content) {
+return res.status(400).send({
+message: "Note content can not be empty"
+});
+}
+// Find note and update it with the request body
+Note.findByIdAndUpdate(req.params.noteId, {
+title: req.body.title || "Untitled Note",
+content: req.body.content
+}, {new: true})
+.then(note => {
+if(!note) {
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+return res.status(404).send({
+message: "Note not found with id " + req.params.noteId
+});
+}
+res.send(note);
+}).catch(err => {
+if(err.kind === 'ObjectId') {
+return res.status(404).send({
+message: "Note not found with id " + req.params.noteId
+});
+}
+return res.status(500).send({
+message: "Error updating note with id " + req.params.noteId
+});
+});
+};
+
+The {new: true} option in the findByIdAndUpdate() method is used to return the modi ed document to
+the then() function instead of the original.
+
+Deleting a Note
+
+// Delete a note with the specified noteId in the request
+exports.delete = (req, res) => {
+Note.findByIdAndRemove(req.params.noteId)
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+.then(note => {
+if(!note) {
+return res.status(404).send({
+message: "Note not found with id " + req.params.noteId
+});
+}
+res.send({message: "Note deleted successfully!"});
+}).catch(err => {
+if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+return res.status(404).send({
+message: "Note not found with id " + req.params.noteId
+});
+}
+return res.status(500).send({
+message: "Could not delete note with id " + req.params.noteId
+});
+});
+};
+
+You can check out the documentation of all the methods that we used in the above APIs on Mongoose’s o cial
+documentation Mongoose save()
+Mongoose nd()
+Mongoose ndById()
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Mongoose ndByIdAndUpdate()
+Mongoose ndByIdAndRemove()
+
+Testing our APIs
+Let’s now test all the APIs one by one using postman.
+
+Creating a new Note using POST /notes API
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Retrieving all Notes using GET /notes API
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Retrieving a single Note using GET /notes/:noteId API
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Updating a Note using PUT /notes/:noteId API
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Deleting a Note using DELETE /notes/:noteId API
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Conclusion
+In this tutorial, We learned how to build rest apis in node.js using express framework and mongodb.
+You can nd the code for this tutorial in my github repository. Please ask any questions that you might have in
+the comment section below.
+Thanks for reading. See you in the next tutorial!
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Liked the Article? Share it on Social media!
+Twitter
+
+138 Comments
+ Recommend 25
+
+Facebook
+
+Linkedin
+
+Reddit
+
+1
+
+
+CalliCoder
+t Tweet
+
+Google+
+
+f Share
+
+Login
+
+Sort by Newest
+
+Join the discussion…
+LOG IN WITH
+
+OR SIGN UP WITH DISQUS ?
+
+Name
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Name
+
+lockwear • 21 days ago
+
+Nice man! Great tutorial Helped me a lot
+
+△ ▽ • Reply • Share ›
+RamzanAli Momin • a month ago
+
+Thanks ! Very useful article for beginner
+
+△ ▽ • Reply • Share ›
+gaurav • a month ago
+
+Please help me how can i create signin and signup api?
+
+△ ▽ • Reply • Share ›
+Dev Aggrwal • a month ago
+
+api
+
+△ ▽ • Reply • Share ›
+Saravanan Chinnadurai • a month ago
+
+Hi Master,
+I am getting this error though i pass the values as you shown
+Note content can not be empty
+
+△ ▽ • Reply • Share ›
+Jordan Mack > Saravanan Chinnadurai • a month ago
+
+You probably didn't restart your node server after updating note.controller.js
+
+△ ▽ • Reply • Share ›
+Charles Muzonzini • 2 months ago
+
+Great tutorial! Thank you!
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+y
+
+△ ▽ • Reply • Share ›
+Muhammad Nurkhayal Kadafi • 3 months ago
+
+It's very helpful , thank you
+
+△ ▽ • Reply • Share ›
+Christian • 3 months ago
+
+This was just what I needed! Thanks so much for this.
+
+△ ▽ • Reply • Share ›
+Vikramjeet Singh • 3 months ago
+
+Yeah still quite nice for me....
+
+△ ▽ • Reply • Share ›
+Danielle Farias • 3 months ago
+
+Thank you so much!
+1△
+
+▽ • Reply • Share ›
+
+Roufal k • 3 months ago
+
+thank you CalliCoder, i am started by this document its very help
+full and simple ,thanks a lot
+
+△ ▽ • Reply • Share ›
+Aravind • 3 months ago
+
+Thanks @Rajeev Singh Singh ! it's works perfect
+I learned this CRUD concept in easy way
+
+△ ▽ • Reply • Share ›
+Yousef Kabbara • 4 months ago
+
+Hello @Rajeev Singh, Thanks for the great simple tutorial, I am having a probelm after finishing all the steps when trying to
+run the App it's giving the following error..
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+pp
+
+g
+
+g
+
+g
+
+Yusufs-MacBook-Air:node-easy-notes-app ykabbara$ node server.js
+/Users/ykabbara/Documents/Node-Project/node-easy-notes-app/node_modules/express/lib/router/route.js:202
+throw new Error(msg);
+^
+Error: Route.post() requires a callback function but got a [object Undefined]
+at Route.(anonymous function) [as post] (/Users/ykabbara/Documents/Node-Project/node-easy-notesapp/node_modules/express/lib/router/route.js:202:15)
+at Function.app.(anonymous function) [as post] (/Users/ykabbara/Documents/Node-Project/node-easy-notesapp/node_modules/express/lib/application.js:482:19)
+at module.exports (/Users/ykabbara/Documents/Node-Project/node-easy-notes-app/app/routes/note.routes.js:5:9)
+at Object.<anonymous> (/Users/ykabbara/Documents/Node-Project/node-easy-notes-app/server.js:35:39)
+at Module._compile (internal/modules/cjs/loader.js:688:30)
+at Object.Module._extensions..js (internal/modules/cjs/loader.js:699:10)
+at Module.load (internal/modules/cjs/loader.js:598:32)
+at tryModuleLoad (internal/modules/cjs/loader.js:537:12)
+at Function.Module._load (internal/modules/cjs/loader.js:529:3)
+at Function.Module.runMain (internal/modules/cjs/loader.js:741:12)
+at startup (internal/bootstrap/node.js:285:19)
+at bootstrapNodeJSCore (internal/bootstrap/node.js:739:3)
+Thanks for your support, all the best.
+
+△ ▽ • Reply • Share ›
+Sidney Palmeira • 4 months ago
+
+Great tutorial Rajeev, simple and useful, Thanks, I'm new with NodeJs, maybe you should mention about test with
+Postman.
+2△
+
+▽ • Reply • Share ›
+Aravind > Sidney Palmeira • 3 months ago
+
+POSTMAN will interact with HTTP APIs for sending requests and reading responses.
+You simply run the url of your project by selecting any of offered requests(GET POST PUT PATCH DELETE)
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+You simply run the url of your project by selecting any of offered requests(GET,POST,PUT,PATCH,DELETE).
+Note: Before sending any requests Make sure in 'Headers' section specify the 'Content-type' of your choice,
+bcoz,sometimes if the field is missing the api throws error.
+
+⛺
+
+1△
+
+▽ • Reply • Share ›
+prakash > Aravind • 13 days ago
+
+thanks it solved my probelm
+
+△ ▽ • Reply • Share ›
+chaitanya sai • 5 months ago
+
+Sir Can you please let me know what is basic use of it?
+
+△ ▽ • Reply • Share ›
+Nitika Bansal • 5 months ago
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+⛺
+
+i am getting problem in post
+error: Unexpected>
+
+△ ▽ • Reply • Share ›
+Rajeev Singh
+
+Mod > Nitika Bansal
+
+• 5 months ago
+
+Hi Nikita,
+Looks like you're not passing anything in the request body. Please check out the POST
+how I'm passing the note title and content in the request body.
+
+/notes
+
+api screenshot to see
+
+△ ▽ • Reply • Share ›
+pavithra sainath • 5 months ago
+
+I am not getting any data after hitting my URL. Also its not throwing error.
+I even have collections in my database. Can you please help me with the possibilities?
+
+△ ▽ • Reply • Share ›
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+py
+Rajeev Singh
+
+Mod > pavithra sainath
+
+• 5 months ago
+
+Hi,
+Which url is not working for you? Can you post the request that you sent and the response you received from the
+server?
+
+△ ▽ • Reply • Share ›
+Arun Shiva • 5 months ago
+
+Hi,
+Thank you so much for the tutorial. Really helpful.
+I tried out the sample project but after deleting a record, I get the success message but the record exists in the database.
+http://192.168.1.115:8000/notes/5ba226f076f8094638cd01ec with delete
+
+△ ▽ • Reply • Share ›
+Iresha Amarasinghe • 5 months ago
+
+Hi Rajeev,
+I'm totally new to node.js, express.js and mongodb.
+Thanks a lot for this tutorial... It worked really fine.
+Do You have any tutorial about creating user login for this API CRUD using passport.js?
+And how to create html views for this CRUD?
+
+△ ▽ • Reply • Share ›
+Yousef Kabbara > Iresha Amarasinghe • 4 months ago
+
+I'm also interested if you find something please let me know.
+7△
+
+▽ • Reply • Share ›
+Iresha Amarasinghe > Yousef Kabbara • 4 months ago
+
+I've almost completed my project. @Yousef Kabbara What do you want to know?
+1△
+
+▽ • Reply • Share ›
+Yousef Kabbara > I
+
+h A
+
+i
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+h
+
+2
+
+th
+
+PDFCROWD
+
+Yousef Kabbara > Iresha Amarasinghe • 2 months ago
+
+Hi @Iresha Amarasinghe , Thank you for replying...
+I also finished by having support from other friends, Thank you!
+7△
+
+▽ • Reply • Share ›
+
+alexlivenow > Yousef Kabbara • 2 months ago
+
+yousefkabbara yes
+4△
+
+▽ • Reply • Share ›
+
+Suvam Chanda • 5 months ago
+
+Hi, I am unable to connect the database, getting the below error
+
+⛺
+here is my server.js
+
+see more
+
+△ ▽ • Reply • Share ›
+Rajeev Singh
+
+Mod > Suvam Chanda
+
+• 5 months ago
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Rajeev Singh
+
+Mod > Suvam Chanda
+
+• 5 months ago
+
+Hi,
+Can you try logging the error stacktrace as well in the console.log statement. It will give you more info about what
+happened.
+console.log('Could not connect to the database. Exiting now...', err);
+
+Also, Please check that you have MongoDB server installed and running in the system, and you're able to connect
+to it using mongo client.
+
+△ ▽ • Reply • Share ›
+Tapan Dave • 5 months ago
+
+Hi,
+Thanks for the excellent tutorial,but i have one question that why we use `require('./routes/index')(app)` instead of that cant
+we use router,or something other
+I am totally new to node,express,mongo, but can you please help me learn how this works "require('./routes/index')(app);",
+and how can we define other routes file like the notes one
+
+△ ▽ • Reply • Share ›
+Rajeev Singh
+
+Mod > Tapan Dave
+
+• 5 months ago
+
+Hi,
+Using the global express.Router is another way of defining the routes. You can definitely use that. More info about it
+can be found on expressJs documentation. I think that's more modular then the approach used in this article, and I'll
+soon update this article with express.Router approach.
+If you want to create another route with the current approach. You can just define another routes file, say
+xyz.routes.js similar to note.routes.js and load the new route in the server.js file by adding the following
+statement require('./app/routes/xyz.routes.js')(app);
+
+h
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+cheers,
+Rajeev
+
+△ ▽ • Reply • Share ›
+Charles Martel • 5 months ago
+
+Thanks for your work.
+Let me add to others: this tutorial works (unlike some I have tried) . I downloaded the project from Github, and installed it in
+a folder.
+I then had to run "npm install express body-parser mongoose --save".
+I also was able to point it at remote data in Mlab, with
+module.exports = {
+//'database' : "mongodb://admin:PWxxx@dsxxx...:2xxxx/easy-notes"
+url: 'mongodb://admin:PWxxxx@xxxx...:2xxxx/testing'
+};
+May I also say this tutorial is effective because it is SIMPLE. It teaches core ideas well because it does not try to do too
+much. Just the right way to help beginners.
+Well done and thank you, Rajeev Kumar Singh.
+
+△ ▽ • Reply • Share ›
+variabl3 • 5 months ago
+
+So how would one go about adding authentication to this? For instance... I have a front-end running on domain X which
+queries this API on domain Y. What are the best means of securing this? I understand there are some inherent things at
+work, but just curious to learn more about the details as I'm new to Node and Express. Thank you for a great tutorial!
+
+△ ▽ • Reply • Share ›
+Rajeev Singh
+
+Mod > variabl3
+
+• 5 months ago
+
+PassportJs is the most popular node library for adding both local as well as social authentication.
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Once you have the authentication in place, you can write a simple middleware to check whether the incoming
+request is authenticated or not before passing the request to the controller method.
+
+△ ▽ • Reply • Share ›
+David MARIE • 5 months ago
+
+Thanks you very much for this great tutorial !
+
+△ ▽ • Reply • Share ›
+Phụng Mqnn • 5 months ago
+
+Hi author !
+Thanks for your tutorial. It is very helpful to me. But I have some error . Can you help me fix it ?
+When I used method Create it return message: "Note content can not be empty"
+
+△ ▽ • Reply • Share ›
+Iresha Amarasinghe > Phụng Mqnn • 5 months ago
+
+same error here...
+
+△ ▽ • Reply • Share ›
+Rajeev Singh
+
+Mod > Iresha Amarasinghe
+
+• 5 months ago
+
+Hi,
+While making the request, Please make sure that the request Content-Type header is set to
+application/json.
+If you're using Postman. You can click raw and then select JSON(application/json) as displayed in the
+screenshots in this post.
+1△
+
+▽ • Reply • Share ›
+
+jaya chandra • 6 months ago
+
+Hi this tutorial is very helpful to me.. But I got one doubt, that is, in the whole code, where is the collection name is
+mentioned as "names" to store in mongodb database
+
+△ ▽ • Reply • Share ›
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Rajeev Singh
+
+Mod > jaya chandra
+
+• 6 months ago
+
+Hi Jaya,
+When you define a model in mongoose. It automatically looks for a collection with the plural version of your model
+name. For example, if your model name is Note, it will look for a collection named notes in the database.
+Mongoose creates the collection if it doesn't exist when you insert something in that collection for the first time.
+You can also specify a custom name for the collection by defining the model like this mongoose.model('Note', NoteSchema, 'mynotes');
+
+Check out Mongoose documentation for more information.
+Cheers!
+1△
+
+▽ • Reply • Share ›
+jaya chandra > Rajeev Singh • 6 months ago
+
+Hi Rajeev, thanks for clearing my doubt. I want to learn MERN stack, as I am new to it. Can you give me
+suggestions to it.
+1△
+
+▽ • Reply • Share ›
+
+Mahesh • 6 months ago
+
+Hi, this is a wonderful tutorial. I'm having a small issue early on as I am unable to connect to the database. I get the
+following error:
+DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new
+parser, pass option { useNewUrlParser: true } to MongoClient.connect.
+I then tried to follow the warning and pass { useNewUrlParser: true } to MongoClient.connect and the warning did go away
+but it still did not connect to the database. Aside from the addition of { useNewUrlParser: true }, the code looks exactly like
+the tutorial. Is anyone facing this problem?
+
+△ ▽ • Reply • Share ›
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+△ ▽ • Reply • Share ›
+najeeb > Mahesh • 6 months ago
+
+yes I have the same issue and also when i am trying to call post api and pass notes get an error "t could not get any
+response there was error connecting to,
+http://localhost:3000/notes"
+but in terminal its say:
+"PS C:\Users\Jeeb\AndroidApps\AndroidWorkPlace\heroku> node server.js
+(node:6872) DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version.
+To use the new parser, pass option { useNewUrlParser: true } to MongoClient.connect.
+Server is listening on port 3000
+Successfully connected to the database"
+1△
+
+▽ • Reply • Share ›
+Rajeev Singh
+
+Mod > najeeb
+
+• 6 months ago
+
+Hi Najeeb,
+I have fixed the deprecated warning in this post. Other than that, all the APIs are working fine. Can you tell
+me your MongoDB version? Also, Please try restarting the MongoDB server and check again.
+1△
+
+▽ • Reply • Share ›
+
+Sakthybaalan Santhanakumaran • 6 months ago
+
+Hi Rajeev Kumar Singh,
+I am using your Node express code to implement my API. I seen that you used, the following coding for POST method.
+// POST
+exports.create = ("/",(req, res, next) =>
+{
+// POST method coding
+});
+In, here I am confusing on exports and create keywords. And they are unable to parse data using Postman Body form-data.
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+On other tutorials I seen
+router.post('/', upload.single('productImage'), (req, res, next) => {
+// POST method coding
+});
+Here they used router variable from Express and post (router.post) is visible that is a POST method.
+So, please clarify me your code exports.create.
+
+△ ▽ • Reply • Share ›
+Rajeev Singh
+
+Mod > Sakthybaalan Santhanakumaran
+
+• 6 months ago
+
+Hi,
+I have just segregated the routes and the actual method handlers in different files for better modularity. All the routes
+that map HTTP requests to a controller method are in the note.routes.js file and all the controller (handler)
+methods are in a different file.
+The exports keyword lets you export a function outside of the current file (module). And, create is not a keyword, it's
+just a method name.
+All the exported methods from the note.controller.js file are being used in the note.routes.js file. The require
+statement in note.routes.js is used to import the methods of the controller.
+Finally, Your multipart/form-data request is not being parsed because bodyParser doesn't handle multipart bodies.
+Check out bodyParser's documentation for details.
+You'll need to use some other package for handling multipart bodies like multer or formidable
+Moreover, express.Router is another way of creating the routes. You can use it if you prefer. Check out express js
+routing guide for details.
+Cheers,
+Rajeev
+
+△ ▽ • Reply • Share ›
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+py
+Localbug • 6 months ago
+
+Hey,
+i get the error:
+{
+"message": "Note content can not be empty"
+}
+The MongoDB is running and if i start $ node server.js, i get the messages:
+Server is listening on port 3000
+Successfully connected to the database
+if i delete the following lines in note.controller.js. The Response-Status are 200-OK :
+//return res.status(400).send({
+// message: "Note content can not be empty"
+// });
+but the 'titel' contains the default content: "title": "Untitled Note".
+I guess, it's a problem with the Middleware/ Mongoose.
+Does anyone have a solution?
+
+△ ▽ • Reply • Share ›
+Rajeev Singh
+
+Mod > Localbug
+
+• 6 months ago
+
+Hi,
+The error message "Note
+
+content can not be empty"
+
+is thrown when req.body doesn't have content field.
+
+Can you check your request and verify that you're sending both title and content in the request body just like the
+Postman screenshot that I've included for POST /notes API?
+
+△ ▽ • Reply • Share ›
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Localbug > Rajeev Singh • 6 months ago
+
+Yeah :-) It works with Postman. I think that the RESTClient -Add on has not sent a JSON format.
+Thank you
+
+△ ▽ • Reply • Share ›
+Load more comments
+
+ALSO ON CALLICODER
+
+Java HashSet: The Complete Reference
+
+Spring Boot Quartz Scheduler Example: Building an
+Email Scheduling app
+
+1 comment • 10 months ago
+
+Miroslav Lesov — Couldn't be more clear, superb tutorial !
+
+18 comments • 5 months ago
+
+Gaurav Masand — Can u please provide me the way i can do
+
+this in my spring mvc web app ?I searched a lot of tuturials
+but there are none related to spring mvc i implemented all …
+
+Generating unique IDs in a distributed environment at
+high scale.
+
+Full Stack App with Spring Boot, Spring Security, JWT,
+MySQL and React - Part 1
+
+3 comments • 8 months ago
+
+28 comments • a year ago
+
+✉
+
+Girish Kamath — Thanks for the wonderful article Rajeev. I
+
+Valmar Júnior — Rajeev, hello again!One question, how can i
+
+like the way you listed all the available options and finally
+narrowed down on the most efficient one. I tried the code …
+
+achieve the result of "findByUsernameOrEmail" using
+QueryDSL?
+
+Subscribe
+
+d Add Disqus to your site
+
+🔒
+
+Disqus' Privacy Policy
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+CalliCoder
+
+ABOUT
+
+RESOURCES
+
+CONNECT
+
+Software Development Tutorials written from the
+
+About CalliCoder
+
+Recommended Books
+
+Twitter
+
+heart!
+
+Advertise
+
+Recommended Courses
+
+Github
+
+Copyright © 2017-2018
+
+Contact Us
+
+URL Encoder
+
+Facebook
+
+Privacy Policy
+
+URL Decoder
+
+Linkedin
+
+Sitemap
+
+ASCII Table
+
+Google+
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+

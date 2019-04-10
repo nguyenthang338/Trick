@@ -1,0 +1,352 @@
+Sign up
+
+ 
+
+Gitﬂow Workﬂow
+
+Gitﬂow Workﬂow is a Git workﬂow design that was ﬁrst published
+and made popular by Vincent Driessen at nvie. The Gitﬂow
+Workﬂow deﬁnes a strict branching model designed around the
+project release. This provides a robust framework for managing
+larger projects.  
+Gitﬂow is ideally suited for projects that have a scheduled release
+cycle. This workﬂow doesn’t add any new concepts or commands
+beyond what’s required for the Feature Branch Workﬂow. Instead,
+it assigns very speciﬁc roles to different branches and deﬁnes
+how and when they should interact. In addition to feature
+branches, it uses individual branches for preparing, maintaining,
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+and recording releases. Of course, you also get to leverage all the
+beneﬁts of the Feature Branch Workﬂow: pull requests, isolatedSign up
+experiments, and more efﬁcient collaboration.
+
+Getting Started
+Gitﬂow is really just an abstract idea of a Git workﬂow. This
+means it dictates what kind of branches to set up and how to
+merge them together. We will touch on the purposes of the
+branches below. The git-ﬂow toolset is an actual command line
+tool that has an installation process. The installation process for
+git-ﬂow is straightforward. Packages for git-ﬂow are available on
+multiple operating systems. On OSX systems, you can execute
+brew install git-ﬂow . On windows you will need to download
+
+and install git-ﬂow. After installing git-ﬂow you can use it in your
+project by executing git ﬂow init . Git-ﬂow is a wrapper around
+Git. The git ﬂow init command is an extension of the default
+git init  command and doesn't change anything in your
+
+repository other than creating branches for you.
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+How it works
+
+Sign up
+
+Develop and Master Branches
+Instead of a single master branch, this workﬂow uses two
+branches to record the history of the project. The master branch
+stores the ofﬁcial release history, and the develop branch serves
+as an integration branch for features. It's also convenient to tag
+all commits in the master branch with a version number.
+The ﬁrst step is to complement the default master with a develop
+branch. A simple way to do this is for one developer to create an
+empty develop branch locally and push it to the server:
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+git branch develop
+git push -u origin develop
+
+Sign up
+
+This branch will contain the complete history of the project,
+whereas master will contain an abridged version. Other
+developers should now clone the central repository and create a
+tracking branch for develop.
+When using the git-ﬂow extension library, executing
+git ﬂow init on an existing repo will create the develop branch:
+
+$ git flow init
+Initialized empty Git repository in ~/project/.git/
+No branches exist yet. Base branches must be created n
+Branch name for production releases: [master]
+Branch name for "next release" development: [develop]
+How to name your supporting branch prefixes?
+Feature branches? [feature/]
+Release branches? [release/]
+Hotfix branches? [hotfix/]
+Support branches? [support/]
+Version tag prefix? []
+$ git branch
+* develop
+master
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Sign up
+
+Feature Branches
+Each new feature should reside in its own branch, which can be
+pushed to the central repository for backup/collaboration. But,
+instead of branching off of master , feature branches use
+develop as their parent branch. When a feature is complete, it
+
+gets merged back into develop. Features should never interact
+directly with master .
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Note that feature branches combined with the develop branch
+Sign up
+is, for all intents and purposes, the Feature Branch Workﬂow. But,
+
+the Gitﬂow Workﬂow doesn’t stop there.
+Feature branches are generally created off to the latest develop
+
+branch.
+
+Creating a feature branch
+Without the git-ﬂow extensions:
+
+git checkout develop
+git checkout -b feature_branch
+
+When using the git-ﬂow extension:
+
+git flow feature start feature_branch
+
+Continue your work and use Git like you normally would.
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Finishing a feature branch
+
+Sign up
+
+When you’re done with the development work on the feature, the
+next step is to merge the feature_branch into develop .
+Without the git-ﬂow extensions:
+
+git checkout develop
+git merge feature_branch
+
+Using the git-ﬂow extensions:
+
+git flow feature finish feature_branch
+
+Release Branches
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Sign up
+
+Once develop has acquired enough features for a release (or a
+predetermined release date is approaching), you fork a release
+branch off of develop . Creating this branch starts the next
+release cycle, so no new features can be added after this point—
+only bug ﬁxes, documentation generation, and other releaseoriented tasks should go in this branch. Once it's ready to ship,
+the release branch gets merged into master and tagged with a
+version number. In addition, it should be merged back into
+develop , which may have progressed since the release was
+
+initiated.
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Using a dedicated branch to prepare releases makes it possible
+for one team to polish the current release while another team
+
+Sign up
+
+continues working on features for the next release. It also creates
+well-deﬁned phases of development (e.g., it's easy to say, “This
+week we're preparing for version 4.0,” and to actually see it in the
+structure of the repository).
+Making release branches is another straightforward branching
+operation. Like feature branches, release branches are based
+on the develop branch. A new release branch can be created
+using the following methods.
+Without the git-ﬂow extensions:
+
+git checkout develop
+git checkout -b release/0.1.0
+
+When using the git-ﬂow extensions:
+
+$ git flow release start 0.1.0
+Switched to a new branch 'release/0.1.0'
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Once the release is ready to ship, it will get merged it into master
+and develop , then the release branch will be deleted. It’s
+
+Sign up
+
+important to merge back into develop because critical updates
+may have been added to the release branch and they need to be
+accessible to new features. If your organization stresses code
+review, this would be an ideal place for a pull request.
+To ﬁnish a release branch, use the following methods:
+Without the git-ﬂow extensions:
+
+git checkout master
+git merge release/0.1.0
+
+Or with the git-ﬂow extension:
+
+git flow release finish '0.1.0'
+
+Hotﬁx Branches
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Sign up
+
+Maintenance or “hotﬁx” branches are used to quickly patch
+production releases. Hotﬁx branches are a lot like release
+branches and feature branches except they're based on master
+instead of develop . This is the only branch that should fork
+directly off of master . As soon as the ﬁx is complete, it should be
+merged into both master and develop (or the current release
+branch), and master should be tagged with an updated version
+number.
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Having a dedicated line of development for bug ﬁxes lets your
+team address issues without interrupting the rest of the workﬂow
+Sign up
+or waiting for the next release cycle. You can think of
+maintenance branches as ad hoc release branches that work
+directly with master . A hotﬁx branch can be created using the
+following methods:
+Without the git-ﬂow extensions:
+
+git checkout master
+git checkout -b hotfix_branch
+
+When using the git-ﬂow extensions: 
+
+$ git flow hotfix start hotfix_branch
+
+Similar to ﬁnishing a release branch, a hotﬁx branch gets
+merged into both master and develop.
+
+git checkout master
+git merge hotfix_branch
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+git checkout develop
+git merge hotfix_branch
+git branch -D hotfix_branch
+
+Sign up
+
+$ git flow hotfix finish hotfix_branch
+
+Example
+A complete example demonstrating a Feature Branch Flow is as
+follows. Assuming we have a repo setup with a master branch.
+
+git checkout master
+git checkout -b develop
+git checkout -b feature_branch
+# work happens on feature branch
+git checkout develop
+git merge feature_branch
+git checkout master
+git merge develop
+git branch -d feature_branch
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+In addition to the feature and release ﬂow, a hotﬁx example is
+as follows:
+
+Sign up
+
+git checkout master
+git checkout -b hotfix_branch
+# work is done commits are added to the hotfix_branch
+git checkout develop
+git merge hotfix_branch
+git checkout master
+git merge hotfix_branch
+
+Summary
+Here we discussed the Gitﬂow Workﬂow. Gitﬂow is one of many
+styles of Git workﬂows you and your team can utilize.
+Some key takeaways to know about Gitﬂow are:
+The workﬂow is great for a release-based software
+workﬂow.
+Gitﬂow offers a dedicated channel for hotﬁxes to production.
+ 
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+The overall ﬂow of Gitﬂow is:
+Sign up
+
+1. A develop branch is created from master
+2. A release branch is created from develop
+3. Feature  branches are created from develop
+4. When a feature is complete it is merged into the develop
+ branch
+5. When the release branch is done it is merged into develop
+and master
+6. If an issue in master is detected a hotﬁx branch is created
+from master
+7. Once the hotﬁx is complete it is merged to both develop
+and master
+Next, learn about the Forking Workﬂow or visit our workﬂow
+comparison page.
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+Sign up
+
+Ready to learn Git?
+Try this interactive tutorial.
+Get started now
+
+Next up:
+
+Forking Workﬂow
+START NEXT TUTORIAL
+
+Create PDF in your applications with the Pdfcrowd HTML to PDF API
+
+PDFCROWD
+
+

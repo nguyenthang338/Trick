@@ -442,6 +442,7 @@ noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 noremap <C-h> <C-w>h
+noremap <C-=> <C-w>=
 
 "" Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv

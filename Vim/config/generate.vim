@@ -522,3 +522,7 @@ else
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
 endif
+
+
+au BufWinLeave * mkview
+au BufWinEnter * silent loadview

@@ -526,3 +526,5 @@ endif
 
 au BufWinLeave * mkview
 au BufWinEnter * silent loadview
+
+set foldmethod=syntax

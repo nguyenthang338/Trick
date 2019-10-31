@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("button").click(function(){
+          $.ajax({
+            url: 'http://zocoxo.com:3000/authen',
+            type: 'post',
+            data: '{"email": "nguyenthang33894@gmail.com"}',
+            /*
+            success: function(res){
+              alert(res[0]);
+            },
+            error: function(res) {
+              alert('Error' + res[0]) ;
+            }
+            */
+          }).done(function (data) {
+              alert (data) ;
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+
+    <div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
+
+    <button>Get External Content</button>
+
+  </body>
+</html>
+
+

@@ -1,6 +1,6 @@
 let node= {
   type: "Identifier",
-  name: "foo"
+  name: "foo",
 }
 
 let { type, name } = node;

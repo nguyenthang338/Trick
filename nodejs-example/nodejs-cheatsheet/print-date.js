@@ -1,3 +1,4 @@
+let TIME = 500;
 var date = new Date();
 var i = 0;
 var nvthang  = function () {
@@ -9,4 +10,4 @@ var nvthang  = function () {
   }
 
 }
-setInterval(nvthang,3000);
+setInterval(nvthang,TIME);

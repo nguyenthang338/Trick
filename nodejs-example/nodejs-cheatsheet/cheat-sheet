@@ -1,0 +1,518 @@
+all-method-javascript.js
+
+
+//List all Object function
+
+
+console.log('List all Object function');
+let method = Object.getOwnPropertyNames(Object).filter(function (p){
+ return typeof Object[p] === 'function';
+});
+
+console.log(method);
+
+
+//let method = Object.getOwnPropertyNames(Array.protype)
+
+//List all array function
+console.log('List all Array function');
+console.log(Object.getOwnPropertyNames(Array.prototype));
+
+//List all Set function
+console.log('List all Set function');
+console.log(Object.getOwnPropertyNames(Set.prototype));
+console.log()
+
+//List all Map function
+console.log('List all Map function');
+console.log(Object.getOwnPropertyNames(Map.prototype));
+
+//List all String function
+console.log('List all String function');
+console.log(Object.getOwnPropertyNames(String.prototype));
+
+detruting-object.js
+
+let node= {
+  type: "Identifier",
+  name: "foo"
+}
+
+let { type, name } = node;
+
+console.log(type);
+console.log(name);
+console.log('why you need write code is real dung khong nao');
+
+Object.keys.js
+
+const object1 = {
+  a: 'somestring',
+  b: 42,
+  c: false,
+  name: 'Nguyen van Thang'
+
+}
+
+var items = Object.keys(object1);
+console.log(Object.keys(object1)); 
+console.log(items);
+
+/*
+items.forEach(function (item){
+  console.log(item);
+})
+*/
+
+console.log(Object.values(object1)); 
+
+console.log(Object.entries(object1));
+
+
+callback-demo.js
+
+//Save config file at json.. Dung khong
+const config = require ('./config');
+
+console.log(config);
+console.log(config.meocon)
+console.log(config.nvthang);
+
+//Everything Oke Roi dung khong.. Cong nghe. Minh cung da tang them mot vai bac roi dung khong .
+//console.log(config.nvthang);
+//console.log(config.mecon);
+/*
+function hello (){
+  console.log('meo con');
+}
+hello({}, function(){
+  console.log('cho con');
+})
+
+*/
+
+config.json
+
+{
+  "nvthang": "Hello world",
+  "meocon": "Meo con"
+}
+
+
+process-args.js
+
+// print process.argv
+process.argv.forEach((val,index) => {
+  console.log(`${index}: ${val}`);
+})
+
+config-json.js
+
+//Save config file at json.. Dung khong
+const config = require ('./config');
+
+console.log(config);
+console.log(config.meocon)
+console.log(config.nvthang);
+
+//Everything Oke Roi dung khong.. Cong nghe. Minh cung da tang them mot vai bac roi dung khong .
+//console.log(config.nvthang);
+//console.log(config.mecon);
+/*
+function hello (){
+  console.log('meo con');
+}
+hello({}, function(){
+  console.log('cho con');
+})
+
+*/
+
+understand-callback.js
+
+
+// define our function with the callback argument
+function some_function(arg1, arg2, callback) {
+  // this generates a random number between
+  // arg1 and arg2
+  var my_number = Math.ceil(Math.random() *
+    (arg1 - arg2) + arg2);
+  // then we're done, so we'll call the callback and
+  // pass our result
+  callback(my_number);
+}
+// call the function
+some_function(5, 15, function(num) {
+  // this anonymous function will run when the
+  // callback is called
+  console.log("callback called! " + num);
+});
+///It might seem silly to go through all that trouble when the value could just be returned normally, but there are situations where that’s impractical and callbacks are necessary.}}
+
+Config
+
+
+Config
+
+
+Config
+
+
+Config
+
+
+print-content.sh
+
+file='cheat-sheet'
+dir='/root/Trick/nodejs-example/nodejs-cheatsheet/'
+
+a=$(find $dir -type f | cut -d '/' -f 6)
+
+for folder in $a
+do
+   echo $folder >> $file
+   echo "" >> $file
+   cat $folder >> $file
+   echo "" >> $file
+done
+
+all-function-javascript
+
+List all Object function
+[ 'assign',
+  'getOwnPropertyDescriptor',
+  'getOwnPropertyDescriptors',
+  'getOwnPropertyNames',
+  'getOwnPropertySymbols',
+  'is',
+  'preventExtensions',
+  'seal',
+  'create',
+  'defineProperties',
+  'defineProperty',
+  'freeze',
+  'getPrototypeOf',
+  'setPrototypeOf',
+  'isExtensible',
+  'isFrozen',
+  'isSealed',
+  'keys',
+  'entries',
+  'values' ]
+
+
+List all Array function
+[ 'length',
+  'constructor',
+  'concat',
+  'find',
+  'findIndex',
+  'pop',
+  'push',
+  'shift',
+  'unshift',
+  'slice',
+  'splice',
+  'includes',
+  'indexOf',
+  'keys',
+  'entries',
+  'forEach',
+  'filter',
+  'map',
+  'every',
+  'some',
+  'reduce',
+  'reduceRight',
+  'toString',
+  'toLocaleString',
+  'join',
+  'reverse',
+  'sort',
+  'lastIndexOf',
+  'copyWithin',
+  'fill',
+  'values' ]
+
+
+List all Set function
+[ 'constructor',
+  'has',
+  'add',
+  'delete',
+  'clear',
+  'entries',
+  'forEach',
+  'size',
+  'values',
+  'keys' ]
+
+List all Map function
+[ 'constructor',
+  'get',
+  'set',
+  'has',
+  'delete',
+  'clear',
+  'entries',
+  'forEach',
+  'keys',
+  'size',
+  'values' ]
+
+
+List all String function
+[ 'length',
+  'constructor',
+  'anchor',
+  'big',
+  'blink',
+  'bold',
+  'charAt',
+  'charCodeAt',
+  'codePointAt',
+  'concat',
+  'endsWith',
+  'fontcolor',
+  'fontsize',
+  'fixed',
+  'includes',
+  'indexOf',
+  'italics',
+  'lastIndexOf',
+  'link',
+  'localeCompare',
+  'match',
+  'normalize',
+  'padEnd',
+  'padStart',
+  'repeat',
+  'replace',
+  'search',
+  'slice',
+  'small',
+  'split',
+  'strike',
+  'sub',
+  'substr',
+  'substring',
+  'sup',
+  'startsWith',
+  'toString',
+  'trim',
+  'trimLeft',
+  'trimRight',
+  'toLowerCase',
+  'toUpperCase',
+  'valueOf',
+  'toLocaleLowerCase',
+  'toLocaleUpperCase',
+  'trimStart',
+  'trimEnd' ]
+
+clone-array.js
+
+//cloning an array in ECMAScript 6 
+//
+let color = [ 'blue', 'green', 'red' ];
+
+let [...clonedClored] = color;
+
+
+let nvthang = {
+  name: 'nvthang',
+  age: 25
+}
+
+//let cloneNvthang = nvthang ;
+
+//this is not function dung khog
+console.log (nvthang.name + nvthang.age);
+console.log( clonedClored);
+
+convertArrayToObject.js
+
+var array = [ 'blue', 'green', 'red' ];
+
+
+//es5 medthod . dung khong
+var nvthang = Object.assign({}, array);
+console.log(nvthang);
+
+var {...object} = array;
+
+console.log (object);
+
+// Array function . That la ba dao . day nhi
+let Arraynvthang  = Object.keys(object).map((k) => nvthang[k] )
+
+console.log (Arraynvthang);
+
+object.js
+
+
+
+var string = {
+  age: 'Nguyen Van Thang',
+  money: 2000,
+  vthang: function(){
+    console.log('Hello world') ;
+  },
+}
+
+console.log(string);
+//console.log ('The gioi cua cog nghe la co that dung khong');
+//console.log(string.age,'Ban Co:' + string.money);
+//console.log ('Everything is object');
+string.vthang();
+
+print-date.js
+
+let TIME = 500;
+var date = new Date();
+var i = 0;
+var nvthang  = function () {
+  i++;
+  if (i % 2 === 0){
+    console.log ( date + '\t \t \t \t \t \t ');
+  } else {
+    console.log ('\t\t\t\t\t\t   \t\t\t\t\t' + date) ;
+  }
+
+}
+setInterval(nvthang,TIME);
+
+test-token.js
+
+var test = require('./token.js');
+
+console.log(test.hostname);
+console.log(test.env)
+
+make-own-callback.js
+
+function nvthang(callback){
+  var helo = 'Hello callback ';
+  console.log('Hello callback' + helo);
+  callback(helo);
+}
+//Gia tri cua //Hello duoc goi ra tu day //Hello duoc goi ra tu day nvthang((k)=> { console.log(k); })
+//
+var demo = function (db,callback ){
+  console.log(db);
+    callback(db);
+  nvthang((k) => {
+    var log = k ; // Ba phai hoc cach su dung var in callback funtion
+    //console.log(k);
+    // console.log(log);
+    //   callback(log);
+  })
+}
+var db = 'vthang';
+demo(db,(k) => {
+  console.log(k);
+})
+//Dung la callback
+//Dung la powerof callback function>minh can thoi gian de hieu no . dung khong nao . Welcome toi con duong cua callback fuction
+  /*
+demo('nvthang', (k) => {
+  console.log(k);
+});
+*/
+
+callback.js
+
+function doHomework(subject, callback) {
+  console.log(`Starting my ${subject} homework.`);
+  callback();
+}
+
+doHomework('math', function() {
+  console.log('Finished my homework');
+});
+
+function helloworld(){
+  console.log("nvthang");
+}
+function meocon(){
+  console.log("meocon");
+}
+function chocon(){
+  console.log("chocon");
+}
+
+//Everything is Object , syntax is callback dung khong.su Dung callabck nhu the nao . cung quan trong day nay
+function homworl(callback, callback1){
+  var nvthang = 'Meo con';
+  callback(nvthang);
+  callback1();
+}
+
+//Dug la call back function. that la kho choi
+homworl(function(k){
+  console.log(k)
+},() => {
+  console.log('Hello world');
+});
+
+setTimeOut-setInterval.js
+
+var TIME = 10000;
+
+//Display text after 3 seconds
+var helo = function(){
+  console.log('Hello world');
+}
+//Make callback day sao
+//setTimeout(helo,TIME);
+// --->> setTimeout kich hoat no 1 lan . setInterval kich hoat function sau khoang thoi gian nhat dinh .. (Tru khi ban bao no stop)...
+// clearInterval()
+setInterval(helo,TIME)
+
+if (TIME == 1000){
+  console.log('ok');
+}
+
+//Dung la phai code nhieu thi moi co the ra van de duoc dung khong
+//If you don't thinking you start codeing
+
+callback-nvthang.js
+
+function nvthang(arg1, arg2,
+  callback1,
+  callback2,
+  callback3
+)
+{
+  callback1(arg1);
+  callback2(arg2);
+  // callback3(arg3);
+}
+
+//This //Minh co ve hieu callback function hon roi dung khong
+nvthang(1, 2,(num1) => {
+  console.log(num1);
+}, (num2) => {
+  console.log(num2);
+})
+
+json.stringify.js
+
+var obj = { name: "John", age: 30, city: "New York" };
+
+var myJSON = JSON.stringify(obj);
+
+console.log(myJSON);
+
+token.js
+
+var config = module.exports = {};
+
+config.env = 'nvthang';
+config.hostname = 'zaxaca.com';
+
+//mongo database
+//config.mongo = {};
+//config.mongo.uri = process.env.MONGO_URI || 'localhost';
+//config.mongo.db = 'example_dev';
+

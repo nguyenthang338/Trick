@@ -7,7 +7,10 @@ const dnName = 'nvthang';
   let client;
 
   try{
-    client = await MongoClient.connect(url);
+    client = await MongoClient.connect(url,{
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
     console.log("Connected correctly to server");
 
     const db = client.db(dbName);

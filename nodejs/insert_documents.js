@@ -6,10 +6,19 @@ const dbName = 'nvthang';
 ( async function(){
   let client;
 
+<<<<<<< HEAD
   client = await MongoClient.connect(url,{
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
+=======
+  try{
+    client = await MongoClient.connect(url,{
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    console.log("Connected correctly to server");
+>>>>>>> d63d49b048fc79f554ad1016812b7c2601fa58d1
 
   console.log("Connected correctly to server");
 

@@ -31,6 +31,9 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
+"vim-bootsrap4-snippets
+Plug 'jvanja/vim-bootstrap4-snippets'
+
 Plug 'ervandew/supertab'
 
 
@@ -170,6 +173,7 @@ let g:session_command_aliases = 1
 syntax on
 set ruler
 set number
+set relativenumber
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
@@ -392,6 +396,7 @@ nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>e :FZF -m<CR>
 
 " snippets
+let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
@@ -533,5 +538,5 @@ set cursorline
 "vim tips folding fun
 au BufWinLeave * mkview
 au BufWinEnter * silent loadview
-
-set foldmethod=syntax
+let g:user_emmet_leader_key=','
+"set foldmethod=syntax

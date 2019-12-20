@@ -5,9 +5,10 @@ const file = '/tmp/data.json'
 
 var data = jsonfile.readFileSync(file);
 
-console.log(data);
+var filter = Object.entries(data).filter((data) => {
+  return data.class_id == 2;
+});
+console.log(filter);
 
 
-data.person1 = 'data4';
 
-jsonfile.writeFileSync(file, data, { spaces: 2 });

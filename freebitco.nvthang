@@ -70,12 +70,12 @@ if( $(event.currentTarget).is(':contains("lose")') )
 console.log('You LOST! Multiplying your bet and betting again.');
 
      changeodd();
-     /*
+     
     setTimeout(function(){
             $loButton.trigger('click');
     }, getRandomWait());
-  */
-    $loButton.trigger('click');
+  
+  //  $loButton.trigger('click');
 }
 });
 
@@ -89,11 +89,11 @@ $('#double_your_btc_bet_win').bind("DOMSubtreeModified",function(event){
 if( $(event.currentTarget).is(':contains("win")') )
 {
     resetodd();
-    /*
+    
     setTimeout(function(){
             $loButton.trigger('click');
     }, getRandomWait());
-    */
-    $loButton.trigger('click');
+    
+    //$loButton.trigger('click');
 }
 });startGame()

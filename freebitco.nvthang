@@ -1,6 +1,6 @@
 var startValue = '0.00000005', // Don't lower the decimal point more than 4x of current balance
 stopPercentage = 0.008, // In %. I wouldn't recommend going past 0.08
-maxWait = 500, // In milliseconds
+maxWait = 1000, // In milliseconds
 stopped = false,
 stopBefore = 3; // In minutes
 
@@ -14,7 +14,7 @@ $('#double_your_btc_stake').val(multiply);
 }
 
 function getRandomWait(){
-var wait = Math.floor(Math.random() * maxWait ) + 100;
+var wait = Math.floor(Math.random() * maxWait ) + 400;
 
 console.log('Waiting for ' + wait + 'ms before next bet.');
 

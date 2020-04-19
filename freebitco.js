@@ -109,6 +109,7 @@ $('#double_your_btc_bet_win').bind("DOMSubtreeModified",function(event){
   {
     resetodd();
 
+    $('#double_your_btc_stake').val(startValue);
     setTimeout(function(){
       $loButton.trigger('click');
     }, getRandomWait());

@@ -3,7 +3,7 @@ var startValue = '0.00000005', // Don't lower the decimal point more than 4x of 
   maxWait = 10, // In milliseconds
   stopped = false,
   stopBefore = 3; // In minutes
-let backodd = 50;
+let backodd = 15;
 
 var $loButton = $('#double_your_btc_bet_lo_button'),
   $hiButton = $('#double_your_btc_bet_hi_button');
@@ -49,12 +49,15 @@ function iHaveEnoughMoni(){
   return ((balance2)/100) * (current2) > stopPercentage/100;
 }
 
-
 function changeodd(){
   var cur = parseFloat( $('#double_your_btc_payout_multiplier').val() ); 
   cur = cur + 1;
   if (cur >= backodd){
-    resetodd();
+    let  current = $('#double_your_btc_stake').val();
+    let multiply = (backodd * current).toFixed(8);
+    $('#double_your_btc_stake').val(multiply);
+
+    $('#double_your_btc_payout_multiplier').val(startodd);
   }else {
     $('#double_your_btc_payout_multiplier').val(cur);
   }

@@ -1,6 +1,6 @@
 var startValue = '0.00000005', // Don't lower the decimal point more than 4x of current balance
   stopPercentage = 0.008, // In %. I wouldn't recommend going past 0.08
-  maxWait = 1000, // In milliseconds
+  maxWait = 10, // In milliseconds
   stopped = false,
   stopBefore = 3; // In minutes
 let backodd = 50;

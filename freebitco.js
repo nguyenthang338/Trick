@@ -1,9 +1,14 @@
+//bat dau 0.0000005 sau 15 lan ma thua 
+//thi tang len 15 * 0.00000005 . Neu ma thua nua thi se la 
+//0.0000001125
+
 var startValue = '0.00000005', // Don't lower the decimal point more than 4x of current balance
   stopPercentage = 0.008, // In %. I wouldn't recommend going past 0.08
   maxWait = 10, // In milliseconds
   stopped = false,
   stopBefore = 3; // In minutes
 let backodd = 15;
+var startodd = 2;
 
 var $loButton = $('#double_your_btc_bet_lo_button'),
   $hiButton = $('#double_your_btc_bet_hi_button');
@@ -98,7 +103,7 @@ $('#double_your_btc_error').bind("DOMSubtreeModified",function(event){
   }
 });
 
-var startodd = 2;
+
 function resetodd(){
   $('#double_your_btc_payout_multiplier').val(startodd);
 }

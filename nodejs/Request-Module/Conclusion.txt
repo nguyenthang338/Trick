@@ -1,3 +1,0 @@
-No doubt request is a powerful module, and likely one that you'll use often.
-Given all of the features it provides, it can act as a great starting point for
-anything from a web crawler to a client library for your API
